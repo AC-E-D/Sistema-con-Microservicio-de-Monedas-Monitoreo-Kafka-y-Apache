@@ -1,0 +1,54 @@
+{% extends "app_core/base.html" %}
+{% block content %}
+<h2>Tipos de Cambio (Base USD)</h2>
+
+{% if error %}
+    <p style="color:red;">No se pudo consultar la API de monedas.</p>
+{% else %}
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Moneda</th>
+        <th>Tasa</th>
+    </tr>
+    {% for clave, valor in rates.items %}
+    <tr>
+        <td>{{ clave }}</td>
+        <td>{{ valor }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+<hr>
+
+<h3>Convertir Moneda</h3>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <label>Cantidad</label><br>
+    <input type="number" step="0.0001" name="cantidad" required><br><br>
+
+    <label>Desde:</label><br>
+    <select name="moneda_origen">
+        {% for clave, valor in rates.items %}
+            <option value="{{ clave }}">{{ clave }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label>Hacia:</label><br>
+    <select name="moneda_destino">
+        {% for clave, valor in rates.items %}
+            <option value="{{ clave }}">{{ clave }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <button type="submit">Convertir</button>
+</form>
+
+{% if resultado %}
+    <h3>Resultado</h3>
+    <p>{{ cantidad }} {{ moneda_origen }} → {{ resultado }} {{ moneda_destino }}</p>
+{% endif %}
+
+{% endblock %}

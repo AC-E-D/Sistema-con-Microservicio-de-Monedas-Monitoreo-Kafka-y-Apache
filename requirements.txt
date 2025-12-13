@@ -1,0 +1,7 @@
+Django>=5.0
+djangorestframework
+drf-spectacular
+psutil
+kafka-python
+requests
+django-sslserver

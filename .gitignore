@@ -1,0 +1,22 @@
+# Logs
+logs/
+*.log
+
+# Kafka
+kafka-logs/
+zookeeper-data/
+
+# Python
+__pycache__/
+*.pyc
+.env
+venv/
+env/
+
+# Django
+db.sqlite3
+media/
+
+# OS
+.DS_Store
+Thumbs.db

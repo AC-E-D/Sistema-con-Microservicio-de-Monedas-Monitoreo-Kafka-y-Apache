@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>API Documentation — ReDoc</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    html, body { height: 100%; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+    #redoc-container { height: 100vh; }
+    #redoc-error { padding: 24px; color: #b00020; background:#fff6f6; display:none; }
+    .loading { padding: 20px; font-size: 14px; color: #444; }
+  </style>
+  <!-- Redoc standalone (CDN) -->
+  <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
+</head>
+<body>
+  <div id="redoc-error" role="alert"></div>
+  <div id="redoc-container" class="loading">Cargando documentación…</div>
+
+  <script>
+    (async function renderRedoc() {
+      const container = document.getElementById('redoc-container');
+      const errBox = document.getElementById('redoc-error');
+
+      function showError(msg) {
+        errBox.style.display = 'block';
+        errBox.textContent = 'Error cargando documentación: ' + msg;
+        container.style.display = 'none';
+        console.error('ReDoc error:', msg);
+      }
+
+      try {
+        // Traer el schema OpenAPI generado por drf-spectacular
+        const resp = await fetch('/api/schema/');
+        if (!resp.ok) {
+          throw new Error('Respuesta no OK: ' + resp.status + ' ' + resp.statusText);
+        }
+
+        // Intentar parsear JSON
+        const schema = await resp.json();
+
+        // Guardar un poco de logging en consola para diagnóstico
+        console.info('OpenAPI schema cargado. Títulos:', schema.info && schema.info.title);
+
+        // Inicializar ReDoc con el objeto schema (no url)
+        // Configuración básica, puedes ajustar opciones aquí.
+        Redoc.init(schema, {
+          scrollYOffset: 50,
+          theme: { colors: { primary: { main: '#0d6efd' } } }
+        }, container);
+
+      } catch (err) {
+        // Si falla, mostrar mensaje legible en la página
+        let msg = err && err.message ? err.message : String(err);
+        showError(msg);
+
+        // consejos adicionales en consola
+        console.warn('Comprueba en la consola de red (Network) la respuesta de /api/schema/, y verifica la consola (F12) para más detalles.');
+      }
+    })();
+  </script>
+</body>
+</html>
