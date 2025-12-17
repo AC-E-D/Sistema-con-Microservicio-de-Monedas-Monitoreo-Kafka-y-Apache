@@ -1,7 +1,11 @@
 # app_core/urls.py
 from django.urls import path
 from . import views
-from .views_monitor import monitor_dashboard, monitor_data
+from .views_monitor import (
+    monitor_dashboard,
+    monitor_data,
+    monitor_monedas,   # 👈 NUEVO
+)
 
 urlpatterns = [
     path('login/', views.login_view, name='login'),
@@ -19,4 +23,7 @@ urlpatterns = [
     # Dashboard de monitoreo
     path('monitor/', monitor_dashboard, name='monitor'),
     path('monitor/data/', monitor_data, name='monitor_data'),
+
+    # 👉 NUEVO: datos de monedas para gráficos (microservicio)
+    path('monitor/monedas/', monitor_monedas, name='monitor_monedas'),
 ]

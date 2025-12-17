@@ -1,146 +1,167 @@
-Sistema de Inventario con API de Monedas, Kafka y Monitoreo
-Descripción del Proyecto
+# Sistema de Inventario con API de Monedas, Kafka y Monitoreo
 
-Este proyecto es un sistema de inventario desarrollado en Django, que integra:
+---
 
-CRUD de productos con autenticación
+## Descripción del Proyecto
 
-API REST de conversión de monedas internacionales
+Este proyecto es un **sistema de inventario desarrollado en Django**, que integra:
 
-Integración con Apache Kafka (productores y consumidores)
+- CRUD de productos con autenticación
+- API REST de conversión de monedas internacionales
+- Integración con Apache Kafka (productores y consumidores)
+- Monitoreo en tiempo real (CPU, RAM, logs y eventos Kafka)
+- Servido mediante **Nginx como reverse proxy HTTPS**
+- Manejo profesional de errores y logging
 
-Monitoreo en tiempo real (CPU, RAM, logs y eventos Kafka)
+El sistema está diseñado con **arquitectura profesional**, separación de responsabilidades y preparado para entornos reales.
 
-Servido mediante Nginx como reverse proxy HTTPS
+---
 
-Manejo profesional de errores y logging
+## Tecnologías Utilizadas
 
-El sistema está diseñado con arquitectura profesional, separación de responsabilidades y preparado para entornos reales.
+### Backend
 
-Tecnologías Utilizadas
-Backend
+- Python 3.10+
+- Django
+- Django REST Framework
+- drf-spectacular (Swagger / OpenAPI)
 
-Python 3.10+
+### Mensajería
 
-Django
+- Apache Kafka 2.6.x (recomendado)
+- Zookeeper
+- kafka-python
 
-Django REST Framework
+### Infraestructura
 
-drf-spectacular (Swagger / OpenAPI)
+- Nginx 1.24+ / 1.29.x
+- HTTPS con certificados SSL (autofirmados para entorno académico)
 
-Mensajería
+---
 
-Apache Kafka 2.6.x (recomendado)
+## Requisitos Previos (IMPORTANTE)
 
-Zookeeper
+⚠️ **Este proyecto requiere software externo además de los paquetes Python.**
 
-kafka-python
-
-Infraestructura
-
-Nginx 1.24+ / 1.29.x
-
-HTTPS con certificados SSL (autofirmados para entorno académico)
-
-Requisitos Previos (IMPORTANTE)
-
-⚠️ Este proyecto requiere software externo además de los paquetes Python.
-
-1. Software obligatorio (NO incluido en requirements.txt)
+### Software obligatorio (NO incluido en `requirements.txt`)
 
 Debes instalar manualmente:
 
-Software	Versión recomendada
-Python	3.10 o superior
-Apache Kafka	2.6.x
-Zookeeper	Incluido con Kafka
-Nginx	1.24+ / 1.29.x
-Git	Última versión
-Instalación del Proyecto
-1️⃣ Clonar el repositorio
+| Software        | Versión recomendada |
+|-----------------|---------------------|
+| Python          | 3.10 o superior     |
+| Apache Kafka    | 3.7.0               |
+| Zookeeper       | Incluido con Kafka  |
+| Nginx           | 1.24+ / 1.29.x      |
+| Git             | Última versión      |
+
+---
+
+## Instalación del Proyecto
+
+### 1️⃣ Clonar el repositorio
+
+```bash
 git clone https://github.com/AC-E-D/Sistema-de-Inventario-con-API-de-monedas-internacionales-y-monitoreo.git
 cd Sistema-de-Inventario-con-API-de-monedas-internacionales-y-monitoreo
+```
 
-Configuración del Entorno Python
+## Configuración del Entorno Python
 Windows / Linux
+```bash
 python -m venv env
+```
+o
+```bash
+python3 -m venv env
+```
 
 Activar entorno virtual
 
 Windows
 
+```bash
 env\Scripts\activate
-
-
+```
 Linux / macOS
 
+```bash
 source env/bin/activate
+```
 
-Instalar dependencias Python
+## Instalar dependencias Python
+```bash
 pip install -r requirements.txt
+```
 
-Instalación y Configuración de Kafka
-2️⃣ Descargar Apache Kafka
+## Instalación y Configuración de Kafka
+## 2️⃣ Descargar Apache Kafka
 
-Descargar Kafka 2.6.x desde:
-
-https://archive.apache.org/dist/kafka/2.6.0/
+Descargar Kafka 3.7.0 desde:
+https://archive.apache.org/dist/kafka/3.7.0/kafka_2.13-3.7.0.tgz
 
 
 ⚠️ Versiones más nuevas pueden causar incompatibilidades con kafka-python.
 
 Extraer Kafka en cualquier carpeta, por ejemplo:
 
-D:\kafka\ (Windows)
+C:\kafka\ (Windows)
 
 /opt/kafka/ (Linux)
 
-3️⃣ Iniciar Zookeeper
+## 3️⃣ Iniciar Zookeeper
 
 Windows
-
+```bash
 bin\windows\zookeeper-server-start.bat config\zookeeper.properties
-
+```
 
 Linux
-
+```bash
 bin/zookeeper-server-start.sh config/zookeeper.properties
-
-4️⃣ Iniciar Kafka Broker
+```
+## 4️⃣ Iniciar Kafka Broker
 
 Windows
-
+```bash
 bin\windows\kafka-server-start.bat config\server.properties
-
+```
 
 Linux
-
+```bash
 bin/kafka-server-start.sh config/server.properties
-
-5️⃣ Iniciar Kafka Consumer del proyecto
+```
+## 5️⃣ Iniciar Kafka Consumer del proyecto
 
 Desde la carpeta del proyecto:
-
+```bash
 python app_core/kafka_consumer.py
-
+```
+o
+```bash
+python kafka_consumer.py
+```
 
 Este proceso debe quedar ejecutándose.
 
 Configuración y Ejecución de Django
 Migraciones
+```bash
 python manage.py migrate
-
-Crear superusuario (opcional)
+```
+Crear superusuario (opcional, ya viene con db con credenciales. Estan al final de este read me)
+```bash
 python manage.py createsuperuser
-
+```
 Iniciar Django (backend)
+```bash
 python manage.py runserver 127.0.0.1:8000
-
+```
 
 Django debe estar ejecutándose antes de iniciar Nginx.
 
-Instalación y Configuración de Nginx
-6️⃣ Descargar Nginx
+## Instalación y Configuración de Nginx
+## 6️⃣ Descargar Nginx
 
 Windows
 
@@ -153,22 +174,23 @@ C:\nginx\
 
 
 Linux
-
+```bash
 sudo apt install nginx
+```
 
-7️⃣ Configurar Nginx
+## 7️⃣ Configurar Nginx
 
-Usar el archivo nginx.conf incluido en el proyecto. Luego de descompirmir el archivo descargado de la página de nginx, copiar nginx.conf dentro de la carpeta conf que esta en el mismo lugar que nginx.exe.
+Usar el archivo nginx.conf incluido en la carpeta raíz del proyecto. Luego de descompirmir el archivo descargado de la página de nginx, copiar nginx.conf dentro de la carpeta conf, esta ultima esta en el mismo lugar que nginx.exe.
 
 Este archivo:
 
-Habilita HTTPS
+- Habilita HTTPS
 
-Usa certificados locales
+- Usa certificados locales
 
-Actúa como reverse proxy hacia Django
+- Actúa como reverse proxy hacia Django
 
-8️⃣ Iniciar Nginx
+## 8️⃣ Iniciar Nginx
 
 Windows
 
@@ -176,8 +198,9 @@ nginx.exe
 
 
 Linux
-
+```bash
 sudo systemctl start nginx
+```
 
 Orden Correcto de Ejecución
 1. Zookeeper
@@ -189,7 +212,9 @@ Orden Correcto de Ejecución
 
 Nginx es el último componente en ejecutarse, ya que depende del backend activo.
 
-Acceso al Sistema
+---
+
+# Acceso al Sistema
 
 Una vez todo esté ejecutándose correctamente:
 
@@ -199,14 +224,24 @@ https://localhost/
 Dashboard de monitoreo
 https://localhost/app_core/monitor/
 
-Credenciales de Prueba
-Usuario: Alex
-Contraseña: 12345678Aa
+URL Swagger (para pruebas de API)
+https://localhost/swagger/
 
-Notas sobre HTTPS
+URL Redoc (para registros)
+https://localhost/redoc/
 
-El sistema usa certificados SSL autofirmados
+## Credenciales de Prueba
+- Usuario: Alex
+- Contraseña: 12345678Aa
 
-El navegador mostrará “No seguro”
+## Notas sobre HTTPS
 
-La comunicación sí está cifrada
+- El sistema usa certificados SSL autofirmados
+
+- El navegador mostrará “No seguro”, lo que es correcto
+
+- La comunicación sí está cifrada
+
+---
+
+# Proyecto hecho Alex Cuevas Danyau

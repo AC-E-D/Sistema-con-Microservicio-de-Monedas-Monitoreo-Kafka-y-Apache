@@ -2,6 +2,7 @@
 import json
 import psutil
 import logging
+import requests
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.conf import settings
@@ -10,6 +11,7 @@ from pathlib import Path
 logger = logging.getLogger("app_core")
 
 LOG_DIR = Path(settings.LOG_DIR)
+MICROSERVICIO_MONEDAS = "http://127.0.0.1:5001/monedas"
 
 
 def leer_log_seguro(path, lineas=5):
@@ -34,15 +36,12 @@ def monitor_dashboard(request):
 
 def monitor_data(request):
     """
-    Retorna métricas en tiempo real en formato JSON.
-    Siempre debe devolver datos válidos.
+    Métricas del sistema (YA EXISTENTES).
     """
     try:
-        # CPU y RAM
         cpu = psutil.cpu_percent(interval=0.3)
         ram = psutil.virtual_memory().percent
 
-        # Logs Kafka y errores
         kafka_lines = leer_log_seguro(LOG_DIR / "kafka.log")
         error_lines = leer_log_seguro(LOG_DIR / "errors.log")
 
@@ -61,3 +60,26 @@ def monitor_data(request):
             "kafka": [],
             "errors": [f"Error interno: {str(e)}"]
         }, status=500)
+
+
+def monitor_monedas(request):
+    """
+    NUEVO endpoint:
+    Devuelve TODAS las monedas exactamente como en la API anterior,
+    pero ahora vía microservicio.
+    """
+    try:
+        r = requests.get(MICROSERVICIO_MONEDAS, timeout=5)
+        r.raise_for_status()
+        data = r.json()
+    except Exception as e:
+        logger.exception("Error obteniendo monedas desde microservicio")
+        return JsonResponse({
+            "base": "EUR",
+            "rates": {}
+        }, status=503)
+
+    return JsonResponse({
+        "base": data.get("base"),
+        "rates": data.get("rates", {})
+    })

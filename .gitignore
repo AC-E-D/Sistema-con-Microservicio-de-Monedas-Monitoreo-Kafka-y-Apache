@@ -1,22 +1,25 @@
-# Logs
-logs/
-*.log
-
-# Kafka
-kafka-logs/
-zookeeper-data/
+# Entorno virtual
+env/
+venv/
 
 # Python
 __pycache__/
 *.pyc
-.env
-venv/
-env/
+*.pyo
 
 # Django
 db.sqlite3
-media/
+*.log
 
-# OS
+# Variables de entorno
+.env
+
+# Kafka logs
+logs/
+
+# VS Code
+.vscode/
+
+# SO
 .DS_Store
 Thumbs.db
