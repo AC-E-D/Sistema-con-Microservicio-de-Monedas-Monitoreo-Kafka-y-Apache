@@ -6,8 +6,6 @@
 
 Este proyecto corresponde a un **sistema backend desarrollado en Django**, que implementa una **arquitectura distribuida basada en microservicios**, mensajería asincrónica y componentes de infraestructura reales.
 
-El sistema actual es una evolución de un proyecto previo y está diseñado para cumplir con **estándares profesionales de documentación, despliegue y separación de responsabilidades**, requeridos en una evaluación académica de backend.
-
 El proyecto integra:
 
 * Backend principal en **Django**
@@ -69,13 +67,13 @@ Requiere software externo instalado manualmente.
 
 ### Software necesario
 
-| Software           | Versión recomendada |
-| ------------------ | ------------------- |
-| Python             | 3.10 o superior     |
-| Apache Kafka       | 3.7.0               |
-| Zookeeper          | Incluido con Kafka  |
-| Apache HTTP Server | 2.4                 |
-| Git                | Última versión      |
+| Software           | Versión recomendada | URL de descarga                                                                              |
+| ------------------ | ------------------- | -------------------------------------------------------------------------------------------- |
+| Python             | 3.10 o superior     | [https://www.python.org/downloads/](https://www.python.org/downloads/)                       |
+| Apache Kafka       | 3.7.0               | [https://archive.apache.org/dist/kafka/3.7.0/](https://archive.apache.org/dist/kafka/3.7.0/) |
+| Zookeeper          | Incluido con Kafka  | [https://kafka.apache.org/downloads](https://kafka.apache.org/downloads)                     |
+| Apache HTTP Server | 2.4                 | [https://httpd.apache.org/download.cgi](https://httpd.apache.org/download.cgi)               |
+| Git                | Última versión      | [https://git-scm.com/downloads](https://git-scm.com/downloads)                               |
 
 ---
 
@@ -132,7 +130,7 @@ Dentro del repositorio se incluye el archivo **`httpd.conf`** ya configurado par
 4. Reemplazar el archivo:
 
 ```text
-C:\Apache24\conf\httpd.conf
+Apache24\conf\httpd.conf
 ```
 
 Este archivo ya contiene:
@@ -161,10 +159,10 @@ C:\kafka\kafka_2.13-3.7.0> bin\windows\kafka-server-start.bat config\server.prop
 
 ## Ejecución del Microservicio de Monedas
 
-Desde la carpeta del microservicio:
+Desde la carpeta del microservicio (evaluacion 3\microservicios\monedas_service):
 
 ```powershell
-(env) D:\Inacap\back end\evaluacion 3\microservicios\monedas_service> python main.py
+python main.py
 ```
 
 Este proceso debe mantenerse ejecutándose.
@@ -174,6 +172,61 @@ Este proceso debe mantenerse ejecutándose.
 ## Ejecución del Backend Django
 
 ### Migraciones
+
+```bash
+python manage.py migrate
+```
+o
+```bash
+python3 manage.py migrate
+```
+
+### Iniciar servidor Django
+
+```bash
+python manage.py runserver 127.0.0.1:8000
+```
+o
+```bash
+python3 manage.py runserver 127.0.0.1:8000
+```
+
+---
+
+## Acceso al Sistema
+
+Una vez que todos los servicios estén ejecutándose correctamente, el cliente puede acceder al sistema desde un navegador web.
+
+### URL del sistema (HTTPS)
+
+```text
+https://localhost/
+```
+
+### URL alternativa directa a Django (solo backend)
+
+```text
+http://127.0.0.1:8000/
+```
+
+### URL del Microservicio de Monedas
+
+```text
+http://127.0.0.1:8001/
+```
+
+---
+
+## Credenciales de Acceso
+
+El sistema ya incluye credenciales de prueba preconfiguradas:
+
+* **Usuario:** Alex
+* **Contraseña:** 12345678Aa
+
+Estas credenciales permiten al cliente acceder al sistema sin configuraciones adicionales.
+
+---
 
 ```bash
 python manage.py migrate
@@ -189,10 +242,10 @@ python manage.py runserver 127.0.0.1:8000
 
 ## Ejecución de Apache
 
-Desde la carpeta `bin` de Apache:
+Desde la carpeta `bin` de Apache (\Apache24\bin):
 
 ```powershell
-PS C:\Apache24\bin> .\httpd.exe
+.\httpd.exe
 ```
 
 ---
@@ -214,7 +267,7 @@ PS C:\Apache24\bin> .\httpd.exe
 * El proyecto requiere **múltiples terminales abiertas**
 * Cada servicio es independiente
 * Si un proceso se detiene, la funcionalidad asociada deja de estar disponible
-* El uso de HTTPS puede generar advertencias por certificados autofirmados
+* El uso de HTTP puede generar advertencias por certificados autofirmados
 
 ---
 
